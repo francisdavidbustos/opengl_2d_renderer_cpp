@@ -1,2 +1,1 @@
-﻿Main.obj : error LNK2019: unresolved external symbol __imp__glViewport@16 referenced in function _main
-C:\Users\busto\source\repos\opengl_2d_renderer_cpp\Debug\opengl_2d_renderer_cpp.exe : fatal error LNK1120: 1 unresolved externals
+﻿  opengl_2d_renderer_cpp.vcxproj -> C:\Users\busto\source\repos\opengl_2d_renderer_cpp\Debug\opengl_2d_renderer_cpp.exe
