@@ -14,11 +14,11 @@ public:
 		bool windowed;
 	} config;
 
-	LPTSTR windowClass;
-	HGLRC RC;
-	HDC DC;
-	HWND WND;
-	DWORD style;
+	LPTSTR windowClass;	// Window Class; Long Pointer to a Tchar STRing
+	HGLRC RC;			// Rendering Context
+	HDC DC;				// Device Context
+	HWND WND;			// Window
+	DWORD style;		// Double Word
 
 	Window();
 	~Window();
@@ -64,7 +64,7 @@ int Window::create(HINSTANCE hInstance, int nCmdShow) {
 	HDC fakeDC = GetDC(fakeWND);	// Device Context
 
 	PIXELFORMATDESCRIPTOR fakePFD;
-	ZeroMemory(&fakePFD, sizeof(fakePFD));
+	ZeroMemory(&fakePFD, sizeof(fakePFD));	// Fills fakePFD with 0s
 	fakePFD.nSize = sizeof(fakePFD);
 	fakePFD.nVersion = 1;
 	fakePFD.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
@@ -93,6 +93,7 @@ int Window::create(HINSTANCE hInstance, int nCmdShow) {
 		return 1;
 	}
 
+	// Get pointers to functions 
 	PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB = nullptr;
 	wglChoosePixelFormatARB = reinterpret_cast<PFNWGLCHOOSEPIXELFORMATARBPROC>(wglGetProcAddress("wglChoosePixelFormatARB"));
 	if (wglChoosePixelFormatARB == nullptr) {
@@ -112,15 +113,16 @@ int Window::create(HINSTANCE hInstance, int nCmdShow) {
 		center();
 	}
 
-	HWND WND = CreateWindow(
+	// Do not create new windows or contexts because most variables in the Window object are still uninitialized
+	WND = CreateWindow(
 		windowClass, "OpenGL Window",		// Class Name, Window Name
-		style,							// Style
-		config.posX, config.posY,		// X Position, Y Position
-		config.width, config.height,	// Width, Height
-		NULL, NULL,						// Parent Window, Menu
-		hInstance, NULL);				// Instance, Param
+		style,								// Style
+		config.posX, config.posY,			// X Position, Y Position
+		config.width, config.height,		// Width, Height
+		NULL, NULL,							// Parent Window, Menu
+		hInstance, NULL);					// Instance, Param
 
-	HDC DC = GetDC(WND);
+	DC = GetDC(WND);
 
 	const int pixelAttribs[] = {
 		WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
@@ -138,7 +140,7 @@ int Window::create(HINSTANCE hInstance, int nCmdShow) {
 
 	int pixelFormatID;
 	UINT numFormats;
-	bool status = wglChoosePixelFormatARB(DC, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
+	const bool status = wglChoosePixelFormatARB(DC, pixelAttribs, NULL, 1, &pixelFormatID, &numFormats);
 
 	if (status == false || numFormats == 0) {
 		MessageBox(0, "wglChoosePixelFormatARB() failed.", "Window::create", MB_ICONERROR);
@@ -150,13 +152,13 @@ int Window::create(HINSTANCE hInstance, int nCmdShow) {
 	SetPixelFormat(DC, pixelFormatID, &PFD);
 
 	const int major_min = 4, minor_min = 5;
-	int contextAttribs[] = {
+	const int contextAttribs[] = {
 		WGL_CONTEXT_MAJOR_VERSION_ARB, major_min,
 		WGL_CONTEXT_MINOR_VERSION_ARB, minor_min,
 		WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 		0 };
 
-	HGLRC RC = wglCreateContextAttribsARB(DC, 0, contextAttribs);
+	RC = wglCreateContextAttribsARB(DC, 0, contextAttribs);
 	if (RC == NULL) {
 		MessageBox(0, "wglCreateContextAttribs() failed.", "Window::create", MB_ICONERROR);
 		return 1;
@@ -240,6 +242,9 @@ void Window::destroy() {
 	}
 	if (DC) {
 		ReleaseDC(WND, DC);
+	}
+	if (WND) {
+		DestroyWindow(WND);
 	}
 }
 
