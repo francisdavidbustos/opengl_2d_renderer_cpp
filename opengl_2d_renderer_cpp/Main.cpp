@@ -213,8 +213,20 @@ LRESULT CALLBACK Window::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam,
 }
 
 void Window::render() {
-	glClearColor(0.129f, 0.586f, 0.949f, 1.0f);		// R 33, G 150, B 243
+	//glClearColor(0.129f, 0.586f, 0.949f, 1.0f);		// R 33, G 150, B 243
 	glClear(GL_COLOR_BUFFER_BIT);
+	float vertices[] = {
+		0.0, 0.5, 0.0,		// Top Corner
+		-0.5, -0.5, 0.0,	// Bottom-left Corner
+		0.5, -0.5, 0.0		// Bottom-right Corner
+	};
+	//glBegin(GL_TRIANGLES);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, vertices);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	//glEnd();
 }
 
 void Window::swapBuffers() {
@@ -256,6 +268,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	if (window.create(hInstance, nCmdShow) != 0) {
 		PostQuitMessage(1);
 	}
+
 	MSG msg;
 	bool active = true;
 	while (active) {
