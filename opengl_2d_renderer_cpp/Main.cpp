@@ -1,6 +1,9 @@
+#define GL_EXT_PROTOTYPES
+#define WGL_EXT_PROTOTYPES
 #include <Windows.h>
 #include <GL/GL.h>
 #include <GL/glext.h>
+#define WGL_EXT_PROTOTYPES
 #include <GL/wglext.h>
 #pragma comment(lib, "opengl32.lib")
 
@@ -213,24 +216,15 @@ LRESULT CALLBACK Window::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam,
 }
 
 void Window::render() {
-	GLuint vertArr;
-	glGenVertexArrays(1, &vertArr);
 
-	glEnableClientState(GL_VERTEX_ARRAY);
+	unsigned int buffer;
+	glGenBuffers(1, &buffer);
+	glClear(GL_COLOR_BUFFER_BIT);
 	glBegin(GL_TRIANGLES);
-	//glClearColor(0.129f, 0.586f, 0.949f, 1.0f);		// R 33, G 150, B 243
-	//glClear(GL_COLOR_BUFFER_BIT);
-	float vertices[] = {
-		0.0, 0.5, 0.0,		// Top Corner
-		-0.5, -0.5, 0.0,	// Bottom-left Corner
-		0.5, -0.5, 0.0		// Bottom-right Corner
-	};
-
-	glVertexPointer(3, GL_FLOAT, 0, vertices);
-	glBegin(GL_TRIANGLES);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glVertex2f(-0.5f, -0.5f);
+	glVertex2f(0.0f, 0.05f);
+	glVertex2f(0.5f, 0.5f);
 	glEnd();
-	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void Window::swapBuffers() {
