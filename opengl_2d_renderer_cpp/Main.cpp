@@ -1,9 +1,9 @@
 #define GL_EXT_PROTOTYPES
 #define WGL_EXT_PROTOTYPES
 #include <Windows.h>
+#include <KHR/khrplatform.h>
 #include <GL/GL.h>
 #include <GL/glext.h>
-#define WGL_EXT_PROTOTYPES
 #include <GL/wglext.h>
 #pragma comment(lib, "opengl32.lib")
 
@@ -218,7 +218,6 @@ LRESULT CALLBACK Window::WindowProcedure(HWND hWnd, UINT message, WPARAM wParam,
 void Window::render() {
 
 	unsigned int buffer;
-	glGenBuffers(1, &buffer);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glBegin(GL_TRIANGLES);
 	glVertex2f(-0.5f, -0.5f);
